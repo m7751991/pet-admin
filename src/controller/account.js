@@ -12,7 +12,8 @@ const accountController = {
   },
 
   async addAccount(ctx) {
-    const { username, password } = ctx.request.body;
+    const body = ctx.request.body;
+    const { username } = body;
     const userRepository = AppDataSource.getRepository(User);
 
     const existingUser = await userRepository.findOne({ where: { username } });
@@ -25,8 +26,7 @@ const accountController = {
       return;
     }
 
-    // Create new user
-    const user = userRepository.create({ username, password });
+    const user = userRepository.create(body);
     await userRepository.save(user);
 
     ctx.body = {
